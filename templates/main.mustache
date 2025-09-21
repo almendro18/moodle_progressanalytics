@@ -1,0 +1,132 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_progressanalytics/main
+
+    Main template for progress analytics block.
+
+    Context variables required for this template:
+    * courseid - The course ID
+    * userid - The user ID
+    * sesskey - Session key
+    * wwwroot - Site URL
+    * blockid - Block instance ID
+
+    Example context (json):
+    {
+        "courseid": 2,
+        "userid": 5,
+        "sesskey": "abc123",
+        "wwwroot": "http://moodle.local",
+        "blockid": 1
+    }
+}}
+
+<div class="block_progressanalytics__container"
+    data-courseid="{{courseid}}"
+    data-sesskey="{{sesskey}}"
+    data-resultslimit="{{resultslimit}}"
+    data-showall="{{showall}}"
+    data-showless="{{showless}}"
+    data-label-notstarted="{{#str}}js_notstarted, block_progressanalytics{{/str}}"
+    data-label-completed="{{#str}}js_completed, block_progressanalytics{{/str}}"
+    data-label-noresults="{{#str}}js_noresults, block_progressanalytics{{/str}}"
+    data-label-noresultsdesc="{{#str}}js_noresults_desc, block_progressanalytics{{/str}}"
+    data-label-personalavg="{{#str}}js_personalavg, block_progressanalytics{{/str}}"
+    data-label-quizzes="{{#str}}js_quizzes, block_progressanalytics{{/str}}"
+    data-label-myaverage="{{#str}}js_myaverage, block_progressanalytics{{/str}}"
+    data-label-courseaverage="{{#str}}js_courseaverage, block_progressanalytics{{/str}}"
+    data-label-comparisonpending="{{#str}}js_comparison_pending, block_progressanalytics{{/str}}"
+    data-label-courseavgprefix="{{#str}}js_courseavgprefix, block_progressanalytics{{/str}}"
+    data-label-yourpercentileprefix="{{#str}}js_yourpercentileprefix, block_progressanalytics{{/str}}"
+>
+    <div class="block_progressanalytics__content-wrapper">
+        
+        <!-- Loading State -->
+        <div id="analytics-loading" class="text-center p-3">
+            <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+            <div class="sr-only">{{#str}}loading, block_progressanalytics{{/str}}</div>
+        </div>
+
+        <!-- Error State -->
+        <div id="analytics-error" class="alert alert-warning d-none" role="alert">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{#str}}errorloadingdata, block_progressanalytics{{/str}}
+        </div>
+
+        <!-- No Quizzes State -->
+        <div id="analytics-noquizzes" class="alert alert-info d-none" role="alert">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            {{#str}}noquizzes, block_progressanalytics{{/str}}
+        </div>
+
+        <!-- Main Content -->
+        <div id="analytics-content" class="d-none">
+            
+            <!-- Progress Chart -->
+            <div class="block_progressanalytics__card mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                            {{#str}}progress, block_progressanalytics{{/str}}
+                        </h6>
+                        <div class="block_progressanalytics__chart-container">
+                            <canvas id="progress-chart" role="img" aria-label="{{#str}}progresschartlabel, block_progressanalytics{{/str}}"></canvas>
+                        </div>
+                        <div id="progress-description" class="block_progressanalytics__chart-description mt-2 text-muted small" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Chart -->
+            <div class="block_progressanalytics__card mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title d-flex justify-content-between align-items-center">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i>
+                            {{#str}}results, block_progressanalytics{{/str}}
+                            <button id="results-toggle-btn" type="button" class="btn btn-link btn-sm p-0" aria-expanded="false" aria-controls="results-chart">{{showall}}</button>
+                        </h6>
+                        <div class="block_progressanalytics__chart-container block_progressanalytics__chart-container--results">
+                            <canvas id="results-chart" role="img" aria-label="{{#str}}resultschartlabel, block_progressanalytics{{/str}}"></canvas>
+                        </div>
+                        <div id="results-description" class="block_progressanalytics__chart-description mt-2 text-muted small" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Chart -->
+            <div class="block_progressanalytics__card">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            {{#str}}comparison, block_progressanalytics{{/str}}
+                        </h6>
+                        <div class="block_progressanalytics__chart-container">
+                            <canvas id="comparison-chart" role="img" aria-label="{{#str}}comparisonchartlabel, block_progressanalytics{{/str}}"></canvas>
+                        </div>
+                        <div id="comparison-description" class="block_progressanalytics__chart-description mt-2 text-muted small" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
